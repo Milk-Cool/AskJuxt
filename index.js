@@ -30,10 +30,10 @@ const args = [
 ];
 
 const doit = async () => {
-    const fr = await fetch("https://old.reddit.com/r/AskReddit"); // Replace the subreddit name HERE! (but keep the "old." part)
+    const fr = await fetch("https://old.reddit.com/r/AskReddit/search/?q=nsfw%3Ano&sort=top&restrict_sr=on&t=day"); // Replace the subreddit name HERE! (but keep the "old." part)
     const tr = await fr.text();
     const { document } = (new JSDOM(tr, { "contentType": "text/html" })).window;
-    const text = document.querySelector("#siteTable > *:nth-child(1) .title").textContent.replaceAll(/\s+\(self\.[a-zA-Z0-9\-_]+\)/g, "");
+    const text = document.querySelector(".search-result .search-title").textContent;
     console.log(text);
 
     const token = await py.call(pymodule, "token", ...args);
