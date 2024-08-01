@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "test": "TEST=1 node index.js",
     "start": "node index.js"
   },
   "repository": {
@@ -22,5 +23,10 @@
   "bugs": {
     "url": "https://github.com/Milk-Cool/AskJuxt/issues"
   },
-  "homepage": "https://github.com/Milk-Cool/AskJuxt#readme"
+  "homepage": "https://github.com/Milk-Cool/AskJuxt#readme",
+  "dependencies": {
+    "jsdom": "^24.1.1",
+    "node-calls-python": "^1.10.0",
+    "node-cron": "^3.0.3"
+  }
 }
