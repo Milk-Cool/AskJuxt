@@ -1,10 +1,13 @@
 import nodecallspython from "node-calls-python";
 import cron from "node-cron";
 import { JSDOM } from "jsdom";
+import fs from "fs";
 
 const py = nodecallspython;
 py.addImportPath("PretendoClients");
 const pymodule = py.importSync("./gettoken.py");
+
+const blacklist = fs.readFileSync("blacklist.txt", "utf-8").split("\n").filter(Boolean);
 
 let {
     DEVICE_ID,
@@ -33,7 +36,21 @@ const doit = async () => {
     const fr = await fetch("https://old.reddit.com/r/AskReddit/search/?q=nsfw%3Ano&sort=top&restrict_sr=on&t=day"); // Replace the subreddit name HERE! (but keep the "old." part)
     const tr = await fr.text();
     const { document } = (new JSDOM(tr, { "contentType": "text/html" })).window;
-    const text = document.querySelector(".search-result .search-title").textContent;
+    const all = document.querySelectorAll(".search-result .search-title");
+    /** @type {string} */
+    let text;
+    let i = 0;
+    while(true) {
+        text = all[i++].textContent;
+        let pass = true;
+        for(const word of blacklist)
+            if(text.toLowerCase().includes(word.toLowerCase())) {
+                pass = false;
+                break;
+            }
+        if(!pass) continue;
+        break;
+    }
     console.log(text);
 
     const token = await py.call(pymodule, "token", ...args);
